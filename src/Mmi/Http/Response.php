@@ -10,6 +10,7 @@
 
 namespace Mmi\Http;
 
+use Mmi\App\KernelException;
 use Mmi\Mvc\Router;
 
 /**
@@ -386,17 +387,18 @@ class Response
 
     /**
      * Wysyła dane do klienta
-     * @param boolean $headers send headers?
-     * @return \Mmi\Http\Response
+     * @param bool $headers send headers?
+     * @return void
+     * @throws KernelException
      */
-    public function send($headers = true): void
+    public function send(bool $headers = true): void
     {
         //wysłanie nagłówków
         $headers ? $this->sendHeaders() : null;
         //opcjonalne uruchomienie panelu deweloperskiego
         if ($this->_debug) {
-            if (null !== $jsonContent = json_decode($this->getContent())) {
-                $jsonContent->debugData = $this->responseDebugger->getArray();
+            if (null !== $jsonContent = json_decode($this->getContent(), true)) {
+                $jsonContent['debugData'] = $this->responseDebugger->getArray();
                 $this->setContent(json_encode($jsonContent));
             }
             //content decorate with debug data
