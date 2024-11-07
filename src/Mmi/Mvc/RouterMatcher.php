@@ -88,7 +88,7 @@ class RouterMatcher
                 break;
             }
             if ((preg_match('/\$([0-9]+)(\|[a-z]+)?/', $value, $mt) && isset($params[$key]))) {
-                if (!empty($mt) && count($mt) > 2) {
+                if (count($mt) > 2) {
                     throw new \Exception('Filters no longer supported');
                 }
                 $matches[$value] = $params[$key];
